@@ -1,0 +1,74 @@
+# Test data file for Tetrahedrons
+# Format: x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4 (four vertices)
+
+# Valid tetrahedron with base on XY plane
+0 0 0 1 0 0 0 1 0 0 0 1
+
+# Valid tetrahedron
+1 2 3 4 5 6 7 8 9 10 11 12
+
+# Valid tetrahedron with negative coordinates
+-5 -5 -5 5 -5 -5 0 5 -5 0 0 5
+
+# Invalid: contains non-numeric character
+1.0 2.0 3.0 4a.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0
+
+# Invalid: insufficient data (only 3 vertices)
+0 0 0 1 1 1 2 2 2
+
+# Invalid: all points are coplanar (on XY plane)
+0 0 0 1 0 0 0 1 0 1 1 0
+
+# Valid regular tetrahedron
+0 0 0 1 0 0 0.5 0.866 0 0.5 0.289 0.816
+
+# Invalid: duplicate vertices
+1 1 1 1 1 1 2 2 2 3 3 3
+
+# Valid tetrahedron with base on XZ plane
+0 0 0 1 0 0 0 0 1 0 2 0
+
+# Invalid: too many values
+1 2 3 4 5 6 7 8 9 10 11 12 13 14
+
+# Valid tetrahedron with large coordinates
+-100 -100 -100 100 -100 -100 0 100 -100 0 0 100
+
+# Invalid: contains letter instead of number
+1.0 2.0 3.0 4.0 5.0 6.0 7.0 abc 9.0 10.0 11.0 12.0
+
+# Valid tetrahedron with decimal coordinates
+1.5 2.5 3.5 4.5 5.5 6.5 7.5 8.5 9.5 10.5 11.5 12.5
+
+# Invalid: special characters
+1.0 2.0 3.0 @4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0
+
+# Valid tetrahedron with base on YZ plane
+0 0 0 0 1 0 0 0 1 2 0 0
+
+# Invalid: three vertices are identical
+5 5 5 5 5 5 5 5 5 10 10 10
+
+# Valid small tetrahedron
+0 0 0 0.1 0 0 0 0.1 0 0 0 0.1
+
+# Invalid: NaN representation
+NaN 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0
+
+# Invalid: Infinity
+1.0 Infinity 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0
+
+# Valid tetrahedron with mixed positive and negative
+-1 -1 -1 1 -1 -1 0 1 -1 0 0 2
+
+# Invalid: all points on a line (degenerate)
+0 0 0 1 1 1 2 2 2 3 3 3
+
+# Valid tetrahedron
+2 3 1 5 4 2 3 7 3 4 5 8
+
+# Invalid: points form a flat triangle with one duplicate
+1 0 0 0 1 0 0 0 1 0 0 1
+
+# Valid tetrahedron with fractional coordinates
+-2.5 3.7 1.2 4.8 -1.3 5.6 2.1 6.4 -3.9 -5.2 2.8 7.1

@@ -1,0 +1,56 @@
+# Test data file for Ovals
+# Format: x1 y1 x2 y2 (two points defining the bounding rectangle)
+
+# Valid ovals
+0 0 4 2
+-5 -3 5 3
+1.5 2.5 6.5 8.5
+-10 -5 -2 5
+
+# Valid oval (circle)
+0 0 5 5
+
+# Invalid entries below (should be skipped)
+
+# Invalid: contains non-numeric character
+2a.0 3.0 4.0 5.0
+
+# Invalid: insufficient data
+1.0 2.0
+
+# Invalid: points on same vertical line (same x coordinate)
+3.0 1.0 3.0 5.0
+
+# Invalid: points on same horizontal line (same y coordinate)
+1.0 4.0 5.0 4.0
+
+# Invalid: identical points
+2.0 2.0 2.0 2.0
+
+# Valid large oval
+-100.5 -50.25 100.5 50.25
+
+# Invalid: too many values
+1 2 3 4 5 6
+
+# Invalid: negative in wrong place with letter
+-3.0 -4.0 abc 6.0
+
+# Valid small oval
+0.1 0.1 0.2 0.3
+
+# Invalid: special characters
+1.0 2.0 @3.0 4.0
+
+# Valid ovals with negative coordinates
+-8 -12 -2 -4
+-15.5 10.2 15.5 20.8
+
+# Invalid: NaN representation
+NaN 1.0 2.0 3.0
+
+# Invalid: Infinity
+Infinity 1.0 2.0 3.0
+
+# Valid edge case: very close to zero
+-0.001 -0.001 0.001 0.001
