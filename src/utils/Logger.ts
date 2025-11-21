@@ -1,6 +1,7 @@
-import pino from 'pino';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import pino from "pino";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import { createWriteStream, mkdirSync, existsSync } from "fs";
 
 /**
  * Logger utility class using Pino for structured logging.
@@ -12,37 +13,29 @@ class Logger {
 
   private constructor() {
     const currentDir = dirname(fileURLToPath(import.meta.url));
-    const projectRoot = join(currentDir, '..', '..');
-    const logFilePath = join(projectRoot, 'logs', 'application.log');
+    const projectRoot = join(currentDir, "..", "..");
+    const logsDir = join(projectRoot, "logs");
+    const logFilePath = join(logsDir, "application.log");
 
-    // Create logger with transport for both console and file
-    this.logger = pino({
-      level: 'info',
-      formatters: {
-        level: (label) => ({ level: label }),
+    // Ensure logs directory exists
+    if (!existsSync(logsDir)) {
+      mkdirSync(logsDir, { recursive: true });
+    }
+
+    // Create file stream for logging
+    const fileStream = createWriteStream(logFilePath, { flags: "a" });
+
+    // Create logger with multistream
+    this.logger = pino(
+      {
+        level: "info",
+        formatters: {
+          level: (label) => ({ level: label }),
+        },
+        timestamp: pino.stdTimeFunctions.isoTime,
       },
-      timestamp: pino.stdTimeFunctions.isoTime,
-    }, pino.transport({
-      targets: [
-        {
-          target: 'pino-pretty',
-          level: 'info',
-          options: {
-            colorize: true,
-            translateTime: 'SYS:standard',
-            ignore: 'pid,hostname',
-          },
-        },
-        {
-          target: 'pino/file',
-          level: 'info',
-          options: {
-            destination: logFilePath,
-            mkdir: true,
-          },
-        },
-      ],
-    }));
+      pino.multistream([{ stream: process.stdout }, { stream: fileStream }]),
+    );
   }
 
   /**
@@ -80,7 +73,11 @@ class Logger {
   /**
    * Logs an error message.
    */
-  public error(message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
+  public error(
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>,
+  ): void {
     const logData: Record<string, unknown> = { ...data };
 
     if (error instanceof Error) {
@@ -121,7 +118,11 @@ class Logger {
   /**
    * Logs a fatal message.
    */
-  public fatal(message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
+  public fatal(
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>,
+  ): void {
     const logData: Record<string, unknown> = { ...data };
 
     if (error instanceof Error) {

@@ -1,11 +1,19 @@
-import { FileReader } from './readers/FileReader.js';
-import { ShapeFactory } from './factories/ShapeFactory.js';
-import { ShapeType } from './factories/ShapeType.js';
-import { OvalService } from './services/OvalService.js';
-import { TetrahedronService } from './services/TetrahedronService.js';
-import { Oval } from './entities/Oval.js';
-import { Tetrahedron } from './entities/Tetrahedron.js';
-import { logger } from './utils/Logger.js';
+import { FileReader } from "./readers/FileReader.js";
+import { ShapeFactory } from "./factories/ShapeFactory.js";
+import { ShapeType } from "./factories/ShapeType.js";
+import { OvalService } from "./services/OvalService.js";
+import { TetrahedronService } from "./services/TetrahedronService.js";
+import { Oval } from "./entities/Oval.js";
+import { Tetrahedron } from "./entities/Tetrahedron.js";
+import { logger } from "./utils/Logger.js";
+
+/**
+ * Helper function to wait for logger to flush before exiting
+ */
+async function flushAndExit(code: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  process.exit(code);
+}
 
 /**
  * Main application entry point.
@@ -13,16 +21,19 @@ import { logger } from './utils/Logger.js';
  */
 async function main(): Promise<void> {
   try {
-    logger.info('=== Shapes Repository Application Started ===');
+    logger.info("=== Shapes Repository Application Started ===");
 
     const fileReader = new FileReader();
     const ovalService = new OvalService();
     const tetrahedronService = new TetrahedronService();
 
     // Read and process Ovals
-    logger.info('--- Processing Ovals ---');
+    logger.info("--- Processing Ovals ---");
     try {
-      const ovals = await fileReader.readShapesFromFile('ovals.txt', ShapeType.OVAL);
+      const ovals = await fileReader.readShapesFromFile(
+        "ovals.txt",
+        ShapeType.OVAL,
+      );
       logger.info(`Successfully loaded ${ovals.length} ovals from file`);
 
       for (const shape of ovals) {
@@ -60,23 +71,25 @@ async function main(): Promise<void> {
           const focalDistance = ovalService.calculateFocalDistance(oval);
           logger.info(`  Focal distance: ${focalDistance.toFixed(4)}`);
 
-          logger.info('');
+          logger.info("");
         } catch (error) {
           logger.error(`Error processing oval ${oval.getName()}`, error);
         }
       }
     } catch (error) {
-      logger.error('Failed to read ovals from file', error);
+      logger.error("Failed to read ovals from file", error);
     }
 
     // Read and process Tetrahedrons
-    logger.info('--- Processing Tetrahedrons ---');
+    logger.info("--- Processing Tetrahedrons ---");
     try {
       const tetrahedrons = await fileReader.readShapesFromFile(
-        'tetrahedrons.txt',
+        "tetrahedrons.txt",
         ShapeType.TETRAHEDRON,
       );
-      logger.info(`Successfully loaded ${tetrahedrons.length} tetrahedrons from file`);
+      logger.info(
+        `Successfully loaded ${tetrahedrons.length} tetrahedrons from file`,
+      );
 
       for (const shape of tetrahedrons) {
         const tetrahedron = shape as Tetrahedron;
@@ -88,7 +101,8 @@ async function main(): Promise<void> {
           logger.info(`  Volume: ${volume.toFixed(4)}`);
 
           // Calculate surface area
-          const surfaceArea = tetrahedronService.calculateSurfaceArea(tetrahedron);
+          const surfaceArea =
+            tetrahedronService.calculateSurfaceArea(tetrahedron);
           logger.info(`  Surface Area: ${surfaceArea.toFixed(4)}`);
 
           // Check if it's a valid tetrahedron
@@ -104,39 +118,50 @@ async function main(): Promise<void> {
           logger.info(`  Base on YZ plane: ${onYZ}`);
 
           // Check if it's regular
-          const isRegular = tetrahedronService.isRegularTetrahedron(tetrahedron);
+          const isRegular =
+            tetrahedronService.isRegularTetrahedron(tetrahedron);
           logger.info(`  Is regular tetrahedron: ${isRegular}`);
 
           // Get edge lengths
           const edges = tetrahedronService.getEdgeLengths(tetrahedron);
-          logger.info(`  Edge lengths: ${edges.map((e) => e.toFixed(4)).join(', ')}`);
+          logger.info(
+            `  Edge lengths: ${edges.map((e) => e.toFixed(4)).join(", ")}`,
+          );
 
           // Calculate volume ratios for coordinate planes
           try {
-            const ratioXY = tetrahedronService.calculateVolumeRatioByXYPlane(tetrahedron, 0);
-            logger.info(`  Volume ratio by XY plane (z=0): ${ratioXY.toFixed(4)}`);
+            const ratioXY = tetrahedronService.calculateVolumeRatioByXYPlane(
+              tetrahedron,
+              0,
+            );
+            logger.info(
+              `  Volume ratio by XY plane (z=0): ${ratioXY.toFixed(4)}`,
+            );
           } catch (error) {
-            logger.debug('Could not calculate volume ratio for XY plane');
+            logger.debug("Could not calculate volume ratio for XY plane");
           }
 
-          logger.info('');
+          logger.info("");
         } catch (error) {
-          logger.error(`Error processing tetrahedron ${tetrahedron.getName()}`, error);
+          logger.error(
+            `Error processing tetrahedron ${tetrahedron.getName()}`,
+            error,
+          );
         }
       }
     } catch (error) {
-      logger.error('Failed to read tetrahedrons from file', error);
+      logger.error("Failed to read tetrahedrons from file", error);
     }
 
     // Demonstrate Factory usage
-    logger.info('--- Factory Method Demonstration ---');
+    logger.info("--- Factory Method Demonstration ---");
     const factory = new ShapeFactory();
 
     // Create an oval using factory
     const customOval = factory.createShape(
       ShapeType.OVAL,
       [0, 0, 10, 6],
-      'CustomOval',
+      "CustomOval",
     );
     logger.info(`Created shape using factory: ${customOval.toString()}`);
 
@@ -147,22 +172,24 @@ async function main(): Promise<void> {
     const customTetrahedron = factory.createShape(
       ShapeType.TETRAHEDRON,
       [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-      'CustomTetrahedron',
+      "CustomTetrahedron",
     );
     logger.info(`Created shape using factory: ${customTetrahedron.toString()}`);
 
-    const tetraVolume = tetrahedronService.calculateVolume(customTetrahedron as Tetrahedron);
+    const tetraVolume = tetrahedronService.calculateVolume(
+      customTetrahedron as Tetrahedron,
+    );
     logger.info(`Custom tetrahedron volume: ${tetraVolume.toFixed(4)}`);
 
-    logger.info('=== Application Completed Successfully ===');
+    logger.info("=== Application Completed Successfully ===");
   } catch (error) {
-    logger.fatal('Application failed with error', error);
-    process.exit(1);
+    logger.fatal("Application failed with error", error);
+    await flushAndExit(1);
   }
 }
 
 // Run the application
-main().catch((error) => {
-  logger.fatal('Unhandled error in main', error);
-  process.exit(1);
+main().catch(async (error) => {
+  logger.fatal("Unhandled error in main", error);
+  await flushAndExit(1);
 });
