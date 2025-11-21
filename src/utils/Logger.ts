@@ -1,7 +1,7 @@
-import pino from "pino";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { createWriteStream, mkdirSync, existsSync } from "fs";
+import pino from 'pino';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { createWriteStream, mkdirSync, existsSync } from 'fs';
 
 /**
  * Logger utility class using Pino for structured logging.
@@ -13,9 +13,9 @@ class Logger {
 
   private constructor() {
     const currentDir = dirname(fileURLToPath(import.meta.url));
-    const projectRoot = join(currentDir, "..", "..");
-    const logsDir = join(projectRoot, "logs");
-    const logFilePath = join(logsDir, "application.log");
+    const projectRoot = join(currentDir, '..', '..');
+    const logsDir = join(projectRoot, 'logs');
+    const logFilePath = join(logsDir, 'application.log');
 
     // Ensure logs directory exists
     if (!existsSync(logsDir)) {
@@ -23,12 +23,12 @@ class Logger {
     }
 
     // Create file stream for logging
-    const fileStream = createWriteStream(logFilePath, { flags: "a" });
+    const fileStream = createWriteStream(logFilePath, { flags: 'a' });
 
     // Create logger with multistream
     this.logger = pino(
       {
-        level: "info",
+        level: 'info',
         formatters: {
           level: (label) => ({ level: label }),
         },
