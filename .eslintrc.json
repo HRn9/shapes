@@ -1,0 +1,77 @@
+{
+  "env": {
+    "es2022": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint", "import"],
+  "rules": {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.test.ts", "**/*.spec.ts", "tests/**/*.ts"]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "no-console": "off",
+    "class-methods-use-this": "off",
+    "operator-linebreak": ["error", "before"],
+    "no-restricted-syntax": "off",
+    "no-continue": "off",
+    "no-plusplus": "off",
+    "no-await-in-loop": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "lines-between-class-members": [
+      "error",
+      "always",
+      {
+        "exceptAfterSingleLine": true
+      }
+    ],
+    "@typescript-eslint/lines-between-class-members": [
+      "error",
+      "always",
+      {
+        "exceptAfterSingleLine": true
+      }
+    ]
+  },
+  "ignorePatterns": ["dist", "node_modules", "coverage", "*.js", "tests/**/*"]
+}
