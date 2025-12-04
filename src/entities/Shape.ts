@@ -1,11 +1,16 @@
+import { Observable } from '../observers/Observable.js';
+import { Observer } from '../observers/Observer.js';
+
 /**
  * Abstract Shape base class.
  * All shapes must extend this class and contain an identifier.
  * Contains only data, no business logic.
+ * Implements Observable pattern to notify observers (e.g., Warehouse) of changes.
  */
-export abstract class Shape {
+export abstract class Shape implements Observable {
   private readonly id: string;
   private readonly name: string;
+  private readonly observers: Observer[] = [];
 
   constructor(id: string, name: string) {
     this.id = id;
@@ -18,6 +23,25 @@ export abstract class Shape {
 
   public getName(): string {
     return this.name;
+  }
+
+  public addObserver(observer: Observer): void {
+    if (!this.observers.includes(observer)) {
+      this.observers.push(observer);
+    }
+  }
+
+  public removeObserver(observer: Observer): void {
+    const index = this.observers.indexOf(observer);
+    if (index > -1) {
+      this.observers.splice(index, 1);
+    }
+  }
+
+  public notifyObservers(): void {
+    this.observers.forEach((observer) => {
+      observer.update(this);
+    });
   }
 
   public abstract toString(): string;

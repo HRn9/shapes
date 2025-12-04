@@ -6,23 +6,28 @@ import { ShapeType } from './ShapeType.js';
 import { OvalValidator } from '../validators/OvalValidator.js';
 import { TetrahedronValidator } from '../validators/TetrahedronValidator.js';
 import { ShapeCreationException } from '../exceptions/ShapeCreationException.js';
+import { Warehouse } from '../warehouse/Warehouse.js';
 
 /**
  * Factory class implementing Factory Method pattern for creating Shape objects.
  * Handles the creation of different shape types based on validated input data.
+ * Automatically registers created shapes in Warehouse for metric tracking.
  */
 export class ShapeFactory {
   private static idCounter = 0;
   private readonly ovalValidator: OvalValidator;
   private readonly tetrahedronValidator: TetrahedronValidator;
+  private readonly warehouse: Warehouse;
 
   constructor() {
     this.ovalValidator = new OvalValidator();
     this.tetrahedronValidator = new TetrahedronValidator();
+    this.warehouse = Warehouse.getInstance();
   }
 
   /**
    * Factory method to create a Shape based on type and data.
+   * Automatically registers the created shape in Warehouse.
    * @param shapeType - The type of shape to create
    * @param data - Raw data array containing shape parameters
    * @param name - Optional name for the shape
@@ -31,17 +36,25 @@ export class ShapeFactory {
    */
   public createShape(shapeType: ShapeType, data: number[], name?: string): Shape {
     try {
+      let shape: Shape;
       switch (shapeType) {
         case ShapeType.OVAL:
-          return this.createOval(data, name);
+          shape = this.createOval(data, name);
+          break;
         case ShapeType.TETRAHEDRON:
-          return this.createTetrahedron(data, name);
+          shape = this.createTetrahedron(data, name);
+          break;
         default:
           throw new ShapeCreationException(
             `Unknown shape type: ${shapeType}`,
             shapeType,
           );
       }
+
+      // Automatically register shape in Warehouse
+      this.warehouse.registerShape(shape);
+
+      return shape;
     } catch (error) {
       if (error instanceof ShapeCreationException) {
         throw error;
