@@ -1,5 +1,6 @@
 import { Point } from './Point.js';
 import { Shape } from './Shape.js';
+import { Visitor } from '../visitors/Visitor.js';
 
 /**
  * Oval entity class representing an oval defined by two points of bounding rectangle.
@@ -43,5 +44,9 @@ export class Oval extends Shape {
   public toString(): string {
     return `Oval[id=${this.getId()}, name=${this.getName()}, `
            + `point1=${this.point1.toString()}, point2=${this.point2.toString()}]`;
+  }
+
+  public accept(visitor: Visitor): void {
+    visitor.visitOval(this);
   }
 }

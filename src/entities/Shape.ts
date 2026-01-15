@@ -1,5 +1,6 @@
 import { Observable } from '../observers/Observable.js';
 import { Observer } from '../observers/Observer.js';
+import { Visitor } from '../visitors/Visitor.js';
 
 /**
  * Abstract Shape base class.
@@ -45,4 +46,10 @@ export abstract class Shape implements Observable {
   }
 
   public abstract toString(): string;
+
+  /**
+   * Method for Visitor pattern - allows visitor to visit the shape
+   * @param visitor - visitor to visit the shape
+   */
+  public abstract accept(visitor: Visitor): void;
 }

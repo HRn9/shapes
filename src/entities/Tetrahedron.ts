@@ -1,5 +1,6 @@
 import { Point } from './Point.js';
 import { Shape } from './Shape.js';
+import { Visitor } from '../visitors/Visitor.js';
 
 /**
  * Tetrahedron entity class representing a tetrahedron defined by four vertices.
@@ -51,5 +52,9 @@ export class Tetrahedron extends Shape {
     return `Tetrahedron[id=${this.getId()}, name=${this.getName()}, `
            + `vertex1=${this.vertex1.toString()}, vertex2=${this.vertex2.toString()}, `
            + `vertex3=${this.vertex3.toString()}, vertex4=${this.vertex4.toString()}]`;
+  }
+
+  public accept(visitor: Visitor): void {
+    visitor.visitTetrahedron(this);
   }
 }
